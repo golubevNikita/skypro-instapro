@@ -1,4 +1,4 @@
-import { getPosts } from "./api.js";
+import { getPosts, postsHost } from "./api.js";
 import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
 import {
@@ -7,6 +7,7 @@ import {
   LOADING_PAGE,
   POSTS_PAGE,
   USER_POSTS_PAGE,
+  UPDATE_AFTER_LIKE,
 } from "./routes.js";
 import { renderPostsPageComponent } from "./components/posts-page-component.js";
 import { renderLoadingPageComponent } from "./components/loading-page-component.js";
@@ -19,8 +20,13 @@ import {
 export let user = getUserFromLocalStorage();
 export let page = null;
 export let posts = [];
+let userId = "";
 
-const getToken = () => {
+export function updatePostsArray(newData) {
+  posts = newData;
+}
+
+export const getToken = () => {
   const token = user ? `Bearer ${user.token}` : undefined;
   return token;
 };
@@ -35,6 +41,7 @@ export const logout = () => {
  * Включает страницу приложения
  */
 export const goToPage = (newPage, data) => {
+  console.log("current page:", page);
   if (
     [
       POSTS_PAGE,
@@ -42,6 +49,7 @@ export const goToPage = (newPage, data) => {
       ADD_POSTS_PAGE,
       USER_POSTS_PAGE,
       LOADING_PAGE,
+      UPDATE_AFTER_LIKE,
     ].includes(newPage)
   ) {
     if (newPage === ADD_POSTS_PAGE) {
@@ -57,7 +65,6 @@ export const goToPage = (newPage, data) => {
       return getPosts({ token: getToken() })
         .then((newPosts) => {
           page = POSTS_PAGE;
-          posts = newPosts;
           renderApp();
         })
         .catch((error) => {
@@ -68,9 +75,16 @@ export const goToPage = (newPage, data) => {
 
     if (newPage === USER_POSTS_PAGE) {
       // @@TODO: реализовать получение постов юзера из API
-      console.log("Открываю страницу пользователя: ", data.userId);
+      page = LOADING_PAGE;
+      renderApp();
+      userId = data.userId;
       page = USER_POSTS_PAGE;
       posts = [];
+
+      return renderApp();
+    }
+
+    if (newPage === UPDATE_AFTER_LIKE) {
       return renderApp();
     }
 
@@ -111,8 +125,31 @@ const renderApp = () => {
       appEl,
       onAddPostClick({ description, imageUrl }) {
         // @TODO: реализовать добавление поста в API
-        console.log("Добавляю пост...", { description, imageUrl });
-        goToPage(POSTS_PAGE);
+        appEl.innerHTML = "Добавляю пост...";
+
+        return fetch(postsHost, {
+          method: "POST",
+          headers: {
+            Authorization: getToken(),
+          },
+          body: JSON.stringify({
+            description,
+            imageUrl,
+          }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Не заполнены обязательные поля");
+            }
+            return response.json();
+          })
+          .then(() => {
+            alert("Новый пост добавлен!");
+            goToPage(POSTS_PAGE);
+          })
+          .catch((error) => {
+            alert("Ошибка:", error.message);
+          });
       },
     });
   }
@@ -125,8 +162,18 @@ const renderApp = () => {
 
   if (page === USER_POSTS_PAGE) {
     // @TODO: реализовать страницу с фотографиями отдельного пользвателя
-    appEl.innerHTML = "Здесь будет страница фотографий пользователя";
-    return;
+    // appEl.innerHTML = "Здесь будет страница фотографий пользователя...";
+
+    return renderPostsPageComponent({
+      appEl,
+      userId,
+    });
+  }
+
+  if (page === UPDATE_AFTER_LIKE) {
+    return renderPostsPageComponent({
+      appEl,
+    });
   }
 };
 

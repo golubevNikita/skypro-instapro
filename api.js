@@ -1,8 +1,11 @@
+import { UPDATE_AFTER_LIKE } from "./routes.js";
+import { getToken, goToPage } from "./index.js";
+
 // Замени на свой, чтобы получить независимый от других набор данных.
 // "боевая" версия инстапро лежит в ключе prod
 const personalKey = "prod";
-const baseHost = "https://webdev-hw-api.vercel.app";
-const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
+const baseHost = "https://wedev-api.sky.pro";
+export const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
 
 export function getPosts({ token }) {
   return fetch(postsHost, {
@@ -57,6 +60,7 @@ export function loginUser({ login, password }) {
 
 // Загружает картинку в облако, возвращает url загруженной картинки
 export function uploadImage({ file }) {
+  console.log("file", file);
   const data = new FormData();
   data.append("file", file);
 
@@ -64,6 +68,19 @@ export function uploadImage({ file }) {
     method: "POST",
     body: data,
   }).then((response) => {
+    console.log("response", response);
+    return response.json();
+  });
+}
+
+export function likeDislike(postId, parameter) {
+  fetch(`${postsHost}/${postId}/${parameter}`, {
+    method: "POST",
+    headers: {
+      Authorization: getToken(),
+    },
+  }).then((response) => {
+    goToPage(UPDATE_AFTER_LIKE);
     return response.json();
   });
 }

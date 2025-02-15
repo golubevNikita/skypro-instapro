@@ -1,3 +1,6 @@
+import { renderHeaderComponent } from "./header-component.js";
+import { loginUser } from "../api.js";
+
 /**
  * Компонент страницы авторизации.
  * Этот компонент предоставляет пользователю интерфейс для входа в систему или регистрации.
