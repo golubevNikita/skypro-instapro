@@ -11,6 +11,9 @@ import {
   user,
 } from "../index.js";
 
+import { formatDistance } from "../node_modules/date-fns/index.js";
+import { ru } from "../node_modules/date-fns/locale.js";
+
 export function renderPostsPageComponent({ appEl, userId }) {
   // @TODO: реализовать рендер постов из api
 
@@ -37,7 +40,13 @@ export function renderPostsPageComponent({ appEl, userId }) {
     })
     .then((data) => {
       updatePostsArray(data.posts);
-      const arrayForRender = data.posts.map((el, index) => {
+      const arrayForRender = data.posts.map((el) => {
+        const resultDistance = formatDistance(
+          new Date(el.createdAt),
+          new Date(),
+          { locale: ru, addSuffix: true, includeSeconds: true }
+        );
+
         return `<li class="post">
         <div class="post-header" data-user-id="${el.user.id}">
             <img src="${el.user.imageUrl}" class="post-header__user-image">
@@ -63,7 +72,7 @@ export function renderPostsPageComponent({ appEl, userId }) {
           ${el.description}
         </p>
         <p class="post-date">
-          ${el.createdAt}
+          ${resultDistance}
         </p>
       </li>`;
       });
@@ -124,7 +133,7 @@ export function renderPostsPageComponent({ appEl, userId }) {
 
             likeDislike(postId, parameter);
           } else {
-            alert("Лайки могут ставить только авторизованные пользователи");
+            alert("Лайки могут ставить только авторизованные пользователи <3");
             return;
           }
         });

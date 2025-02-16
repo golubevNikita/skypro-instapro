@@ -1,6 +1,13 @@
 import { getPosts, postsHost } from "./api.js";
 import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
+import { renderPostsPageComponent } from "./components/posts-page-component.js";
+import { renderLoadingPageComponent } from "./components/loading-page-component.js";
+import {
+  getUserFromLocalStorage,
+  removeUserFromLocalStorage,
+  saveUserToLocalStorage,
+} from "./helpers.js";
 import {
   ADD_POSTS_PAGE,
   AUTH_PAGE,
@@ -9,13 +16,6 @@ import {
   USER_POSTS_PAGE,
   UPDATE_AFTER_LIKE,
 } from "./routes.js";
-import { renderPostsPageComponent } from "./components/posts-page-component.js";
-import { renderLoadingPageComponent } from "./components/loading-page-component.js";
-import {
-  getUserFromLocalStorage,
-  removeUserFromLocalStorage,
-  saveUserToLocalStorage,
-} from "./helpers.js";
 
 export let user = getUserFromLocalStorage();
 export let page = null;
@@ -125,7 +125,9 @@ const renderApp = () => {
       appEl,
       onAddPostClick({ description, imageUrl }) {
         // @TODO: реализовать добавление поста в API
-        appEl.innerHTML = "Добавляю пост...";
+        // appEl.innerHTML = "Добавляю пост...";
+        page = LOADING_PAGE;
+        renderApp();
 
         return fetch(postsHost, {
           method: "POST",

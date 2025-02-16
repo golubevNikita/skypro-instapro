@@ -14,6 +14,7 @@ export function onImageUrlChange(imageUrl) {
   if ((imageUrl = "")) {
     return;
   }
+  console.log("ne rabotaet");
   alert("Изображение изменено");
 }
 

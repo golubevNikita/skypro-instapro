@@ -1,9 +1,11 @@
 import { renderHeaderComponent } from "./header-component.js";
-import { renderUploadImageComponent } from "./upload-image-component.js";
-import { onImageUrlChange } from "./upload-image-component.js";
 import { correctInput } from "../helpers.js";
 import { goToPage } from "../index.js";
 import { POSTS_PAGE } from "../routes.js";
+import {
+  renderUploadImageComponent,
+  onImageUrlChange,
+} from "./upload-image-component.js";
 
 export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
   const render = () => {
@@ -78,10 +80,10 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
         return;
       }
 
-      const enteredText = document.getElementById("description-input").value;
+      const enteredText = document.getElementById("description-input");
       let description;
 
-      if (!enteredText) {
+      if (!enteredText.value) {
         alert("Введите описание");
         return;
       } else {
