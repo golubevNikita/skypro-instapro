@@ -14,9 +14,9 @@ import {
 import { formatDistance } from "../node_modules/date-fns/index.js";
 import { ru } from "../node_modules/date-fns/locale.js";
 
-export function renderPostsPageComponent({ appEl, userId }) {
-  // @TODO: реализовать рендер постов из api
+// рендер постов из api
 
+export function renderPostsPageComponent({ appEl, userId }) {
   let url;
 
   userId ? (url = `${postsHost}/user-posts/${userId}`) : (url = postsHost);
@@ -90,13 +90,6 @@ export function renderPostsPageComponent({ appEl, userId }) {
       appEl.innerHTML = appHtml;
     })
     .then(() => {
-      console.log("Актуальный список постов:", posts);
-
-      /**
-       * @TODO: чтобы отформатировать дату создания поста в виде "19 минут назад"
-       * можно использовать https://date-fns.org/v2.29.3/docs/formatDistanceToNow
-       */
-
       renderHeaderComponent({
         element: document.querySelector(".header-container"),
       });

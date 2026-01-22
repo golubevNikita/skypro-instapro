@@ -1,36 +1,33 @@
 import { uploadImage } from "../api.js";
 
+//  страница загрузки изображения
+
 /**
- * Компонент загрузки изображения.
- * Этот компонент позволяет пользователю загружать изображение и отображать его превью.
- * Если изображение уже загружено, пользователь может заменить его.
+ * позволяет пользователю загружать изображение и отображать его превью.
+ * Если изображение уже загружено, пользователь может заменить его
  *
- * @param {HTMLElement} params.element - HTML-элемент, в который будет рендериться компонент.
- * @param {Function} params.onImageUrlChange - Функция, вызываемая при изменении URL изображения.
- *                                            Принимает один аргумент - новый URL изображения или пустую строку.
+ * @param {HTMLElement} params.element - HTML-элемент, в который будет рендериться компонент
+ * @param {Function} params.onImageUrlChange - функция, вызываемая при изменении URL изображения.
+ *                                            Принимает новый URL изображения или пустую строку
  */
 
 export function onImageUrlChange(imageUrl) {
   if ((imageUrl = "")) {
     return;
   }
-  console.log("ne rabotaet");
+
   alert("Изображение изменено");
 }
 
 export function renderUploadImageComponent({ element, onImageUrlChange }) {
   /**
    * URL текущего изображения.
-   * Изначально пуст, пока пользователь не загрузит изображение.
+   * Изначально пуст, пока пользователь не загрузит изображение
    * @type {string}
    */
   let imageUrl = "";
 
-  /**
-   * Функция рендеринга компонента.
-   * Отображает интерфейс компонента в зависимости от состояния:
-   * либо форма выбора файла, либо превью загруженного изображения с кнопкой замены.
-   */
+  //  отображает либо форму выбора файла, либо превью загруженного изображения с кнопкой замены
   const render = () => {
     element.innerHTML = `
       <div class="upload-image">
@@ -56,7 +53,7 @@ export function renderUploadImageComponent({ element, onImageUrlChange }) {
       </div>
     `;
 
-    // Обработчик выбора файла
+    // обработчик выбора файла
     const fileInputElement = element.querySelector(".file-upload-input");
     fileInputElement?.addEventListener("change", () => {
       const file = fileInputElement.files[0];
@@ -65,25 +62,24 @@ export function renderUploadImageComponent({ element, onImageUrlChange }) {
         labelEl.setAttribute("disabled", true);
         labelEl.textContent = "Загружаю файл...";
 
-        // Загружаем изображение с помощью API
+        // загружает изображение с помощью API
         uploadImage({ file }).then(({ fileUrl }) => {
-          imageUrl = fileUrl; // Сохраняем URL загруженного изображения
-          onImageUrlChange(imageUrl); // Уведомляем о изменении URL изображения
-          render(); // Перерисовываем компонент с новым состоянием
+          imageUrl = fileUrl; // сохраняет URL загруженного изображения
+          onImageUrlChange(imageUrl); // уведомляет об изменении URL изображения
+          render();
         });
       }
     });
 
-    // Обработчик удаления изображения
+    // обработчик удаления изображения
     element
       .querySelector(".file-upload-remove-button")
       ?.addEventListener("click", () => {
-        imageUrl = ""; // Сбрасываем URL изображения
-        onImageUrlChange(imageUrl); // Уведомляем об изменении URL изображения
-        render(); // Перерисовываем компонент
+        imageUrl = ""; // сбрасывает URL изображения
+        onImageUrlChange(imageUrl); // уведомляет об изменении URL изображения
+        render();
       });
   };
 
-  // Инициализация компонента
   render();
 }

@@ -1,8 +1,6 @@
 import { UPDATE_AFTER_LIKE } from "./routes.js";
 import { getToken, goToPage } from "./index.js";
 
-// Замени на свой, чтобы получить независимый от других набор данных.
-// "боевая" версия инстапро лежит в ключе prod
 const personalKey = "golubev-nikita";
 const baseHost = "https://wedev-api.sky.pro";
 export const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
@@ -58,9 +56,8 @@ export function loginUser({ login, password }) {
   });
 }
 
-// Загружает картинку в облако, возвращает url загруженной картинки
+// загружает картинку в облако, возвращает url загруженной картинки
 export function uploadImage({ file }) {
-  console.log("file", file);
   const data = new FormData();
   data.append("file", file);
 
@@ -68,7 +65,6 @@ export function uploadImage({ file }) {
     method: "POST",
     body: data,
   }).then((response) => {
-    console.log("response", response);
     return response.json();
   });
 }

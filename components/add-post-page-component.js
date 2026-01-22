@@ -7,10 +7,10 @@ import {
   onImageUrlChange,
 } from "./upload-image-component.js";
 
+// страница добавления поста
+
 export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
   const render = () => {
-    // @TODO: Реализовать страницу добавления поста
-
     const appHtml = `
     <div class="page-container">
       <div class="header-container"></div>
@@ -56,23 +56,6 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
     });
 
     document.getElementById("add-button").addEventListener("click", () => {
-      // {"error":"Удалять посты с prod нельзя"}
-      // const getToken = () => {
-      //   const user = JSON.parse(window.localStorage.getItem("user"));
-      //   const token = `Bearer ${user.token}`;
-      //   return token;
-      // };
-
-      // fetch(
-      //   "https://wedev-api.sky.pro/api/v1/prod/instapro/67ae4ff795358d6dbfdc63b6",
-      //   {
-      //     method: "DELETE",
-      //     headers: {
-      //       Authorization: getToken(),
-      //     },
-      //   }
-      // );
-
       const imageUrl = document.getElementById("image-itself")?.src;
 
       if (!imageUrl) {
