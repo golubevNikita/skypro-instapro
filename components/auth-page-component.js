@@ -2,34 +2,29 @@ import { renderHeaderComponent } from "./header-component.js";
 import { loginUser, registerUser } from "../api.js";
 import { renderUploadImageComponent } from "./upload-image-component.js";
 
+//  страница авторизации (вход или регистрация)
+
 /**
- * Компонент страницы авторизации.
- * Этот компонент предоставляет пользователю интерфейс для входа в систему или регистрации.
- * Форма переключается между режимами "Вход" и "Регистрация".
- *
- * @param {HTMLElement} params.appEl - Корневой элемент приложения, в который будет рендериться страница.
- * @param {Function} params.setUser - Функция, вызываемая при успешной авторизации или регистрации.
- *                                    Принимает объект пользователя в качестве аргумента.
+ * @param {HTMLElement} params.appEl - корневой элемент приложения
+ * @param {Function} params.setUser - функция, вызываемая при успешной авторизации или регистрации.
+ *                                    Принимает объект пользователя в качестве аргумента
  */
+
 export function renderAuthPageComponent({ appEl, setUser }) {
   /**
-   * Флаг, указывающий текущий режим формы.
-   * Если `true`, форма находится в режиме входа. Если `false`, в режиме регистрации.
+   * текущий режим формы: `true` - вход, `false` - регистрация
    * @type {boolean}
    */
   let isLoginMode = true;
 
   /**
    * URL изображения, загруженного пользователем при регистрации.
-   * Используется только в режиме регистрации.
+   * Используется только в режиме регистрации
    * @type {string}
    */
   let imageUrl = "";
 
-  /**
-   * Рендерит форму авторизации или регистрации.
-   * В зависимости от значения `isLoginMode` отображает соответствующий интерфейс.
-   */
+  // форма авторизации или регистрации (в зависимости от `isLoginMode`)
   const renderForm = () => {
     const appHtml = `
       <div class="page-container">
@@ -73,19 +68,19 @@ export function renderAuthPageComponent({ appEl, setUser }) {
     appEl.innerHTML = appHtml;
 
     /**
-     * Устанавливает сообщение об ошибке в форме.
-     * @param {string} message - Текст сообщения об ошибке.
+     * сообщение об ошибке в форме
+     * @param {string} message - текст сообщения об ошибке
      */
     const setError = (message) => {
       appEl.querySelector(".form-error").textContent = message;
     };
 
-    // Рендерим заголовок страницы
+    // заголовок страницы
     renderHeaderComponent({
       element: document.querySelector(".header-container"),
     });
 
-    // Если режим регистрации, рендерим компонент загрузки изображения
+    // компонент загрузки изображения
     const uploadImageContainer = appEl.querySelector(".upload-image-container");
     if (uploadImageContainer) {
       renderUploadImageComponent({
@@ -96,12 +91,12 @@ export function renderAuthPageComponent({ appEl, setUser }) {
       });
     }
 
-    // Обработка клика на кнопку входа/регистрации
+    // обработка клика на кнопку входа/регистрации
     document.getElementById("login-button").addEventListener("click", () => {
       setError("");
 
       if (isLoginMode) {
-        // Обработка входа
+        // обработка входа
         const login = document.getElementById("login-input").value;
         const password = document.getElementById("password-input").value;
 
@@ -120,11 +115,11 @@ export function renderAuthPageComponent({ appEl, setUser }) {
             setUser(user.user);
           })
           .catch((error) => {
-            console.warn(error);
+            alert(error);
             setError(error.message);
           });
       } else {
-        // Обработка регистрации
+        // обработка регистрации
         const login = document.getElementById("login-input").value;
         const name = document.getElementById("name-input").value;
         const password = document.getElementById("password-input").value;
@@ -154,19 +149,18 @@ export function renderAuthPageComponent({ appEl, setUser }) {
             setUser(user.user);
           })
           .catch((error) => {
-            console.warn(error);
+            alert(error);
             setError(error.message);
           });
       }
     });
 
-    // Обработка переключения режима (вход ↔ регистрация)
+    // обработка переключения режима (вход ↔ регистрация)
     document.getElementById("toggle-button").addEventListener("click", () => {
       isLoginMode = !isLoginMode;
-      renderForm(); // Перерисовываем форму с новым режимом
+      renderForm();
     });
   };
 
-  // Инициализация формы
   renderForm();
 }
