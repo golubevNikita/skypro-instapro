@@ -1,0 +1,14 @@
+.git/
+.gitignore
+.vscode/
+node_modules/
+Dockerfile
+docker-compose.yml
+README.md
+*.log
+*.tmp
+*.scss
+*.sass
+.eslintrc
+.prettierrc
+package-lock.json
