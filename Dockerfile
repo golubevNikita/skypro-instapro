@@ -11,8 +11,8 @@ FROM nginx:alpine
 WORKDIR /usr/share/nginx/html
 
 COPY --from=builder /app/*.html ./
-COPY --from=builder /app/*.css ./css/
-COPY --from=builder /app/*.js ./js/
+COPY --from=builder /app/*.css ./
+COPY --from=builder /app/*.js ./
 COPY --from=builder /app/components ./js/components/
 COPY --from=builder /app/assets ./assets/
 COPY --from=builder /app/node_modules ./node_modules/
